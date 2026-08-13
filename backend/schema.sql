@@ -60,6 +60,17 @@ CREATE TABLE IF NOT EXISTS task_activity (
     FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE CASCADE
 );
 
+-- Table: hermes_conversations
+CREATE TABLE IF NOT EXISTS hermes_conversations (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    session_id VARCHAR(255) NOT NULL,
+    role ENUM('USER', 'ASSISTANT', 'SYSTEM') NOT NULL,
+    message TEXT NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_hermes_conv_session (session_id),
+    INDEX idx_hermes_conv_created (created_at)
+);
+
 -- Table: api_keys (untuk autentikasi Hermes Agent / pihak ketiga)
 CREATE TABLE IF NOT EXISTS api_keys (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,

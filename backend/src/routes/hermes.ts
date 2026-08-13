@@ -368,10 +368,16 @@ router.post("/check-in", async (req: Request, res: Response) => {
     return res.status(400).json({ success: false, error: "session_id, role, and message are required" });
   }
 
+  const allowedRoles = ["USER", "ASSISTANT", "SYSTEM"];
+  if (!allowedRoles.includes(String(role).toUpperCase())) {
+    return res.status(400).json({ success: false, error: "role must be USER, ASSISTANT, or SYSTEM" });
+  }
+  const normalizedRole = String(role).toUpperCase();
+
   try {
     await pool.execute(
       "INSERT INTO hermes_conversations (session_id, role, message) VALUES (?, ?, ?)",
-      [session_id, role, message]
+      [session_id, normalizedRole, message]
     );
 
     res.json({ success: true, message: "Conversation recorded successfully" });
